@@ -4,16 +4,30 @@ import pickle
 import time
 import cv2
 import os
- 
+import urllib.request
+import numpy as np
+import RPi.GPIO as GPIO 
+
 cascPathface = os.path.dirname(
  cv2.__file__) + "/data/haarcascade_frontalface_alt2.xml"
 faceCascade = cv2.CascadeClassifier(cascPathface)
 data = pickle.loads(open('face_enc', "rb").read())
+
+PIN = 4
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(PIN, GPIO.OUT)
+
+
+url = "http://172.31.123.243:8080/shot.jpg"
  
-print("Streaming started")
-video_capture = cv2.VideoCapture(0)
+#print("Streaming started")
+#video_capture = cv2.VideoCapture(0)
 while True:
-    ret, frame = video_capture.read()
+ 	imgPath = urllib.request.urlopen(url)
+ 	imgNp = np.array(bytearray(imgPath.read()), dtype=np.uint8)
+ 	frame = cv2.imdecode(imgNp, -1)
+    #ret, frame = video_capture.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = faceCascade.detectMultiScale(gray,
                                          scaleFactor=1.1,
@@ -38,6 +52,10 @@ while True:
  
  
         names.append(name)
+        if name != "Unknown":
+        	GPIO.output(PIN, GPIO.HIGH)
+        else
+        	GPIO.output(PIN, GPIO.LOW)
         for ((x, y, w, h), name) in zip(faces, names):
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.putText(frame, name, (x, y), cv2.FONT_HERSHEY_SIMPLEX,
