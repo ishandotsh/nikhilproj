@@ -20,7 +20,9 @@ GPIO.setup(PIN, GPIO.OUT)
 
 
 url = "http://192.168.155.226:8080/shot.jpg"
- 
+
+t= 0
+
 #print("Streaming started")
 #video_capture = cv2.VideoCapture(0)
 while True:
@@ -53,8 +55,14 @@ while True:
 
   names.append(name)
   if name != "Unknown":
-   GPIO.output(PIN, GPIO.HIGH)
+   if t > 20:
+    GPIO.output(PIN, GPIO.LOW)
+    t -= 1
+   else:
+    GPIO.output(PIN, GPIO.HIGH)
+    t += 2
   else:
+   t = 0
    GPIO.output(PIN, GPIO.LOW)
   for ((x, y, w, h), name) in zip(faces, names):
    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
