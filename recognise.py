@@ -54,7 +54,7 @@ while True:
   names.append(name)
   if name != "Unknown":
    GPIO.output(PIN, GPIO.HIGH)
-  else
+  else:
    GPIO.output(PIN, GPIO.LOW)
   for ((x, y, w, h), name) in zip(faces, names):
    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
