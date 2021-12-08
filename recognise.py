@@ -19,7 +19,7 @@ GPIO.setwarnings(False)
 GPIO.setup(PIN, GPIO.OUT)
 
 
-url = "http://172.31.123.243:8080/shot.jpg"
+url = "http://192.168.155.226:8080/shot.jpg"
  
 #print("Streaming started")
 #video_capture = cv2.VideoCapture(0)
